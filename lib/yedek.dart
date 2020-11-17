@@ -2,7 +2,7 @@ import 'package:day_night_switcher/day_night_switcher.dart';
 import 'package:flutter/material.dart';
 
 /// Hello world !
-void main() => runApp(_DayNightSwitcherExample());
+//void main() => runApp(_DayNightSwitcherExample());
 
 /// The main widget.
 class _DayNightSwitcherExample extends StatefulWidget {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 
-void main() => runApp(MyApp());
+//void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   @override
