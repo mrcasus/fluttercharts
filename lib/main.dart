@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:charts_flutter/flutter.dart' as charts;
 
 void main() => runApp(MyApp());
 
@@ -22,6 +23,27 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
+    var data = [
+      Sales("Bakım Yapılan", 15),
+      Sales("Bakım Yapılmıyan", 30),
+    ];
+
+    var series = [
+      charts.Series(
+          domainFn: (Sales sales, _) => sales.day,
+          measureFn: (Sales sales, _) => sales.sold,
+          id: 'Sales',
+          data: data,
+          labelAccessorFn: (Sales sales, _) =>
+              '${sales.day}: ${sales.sold.toString()}')
+    ];
+
+    var chart = charts.PieChart(
+      series,
+      defaultRenderer: charts.ArcRendererConfig(
+          arcRendererDecorators: [charts.ArcLabelDecorator()]),
+    );
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -69,8 +91,10 @@ class _MyHomePageState extends State<MyHomePage> {
                           blurRadius: 10.0)
                     ]),
               ),
+              SizedBox(height: 250, child: chart),
             ],
           ),
+          
           SizedBox(
             height: 60.0,
           ),
@@ -85,7 +109,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     width: 150.0,
                     decoration: BoxDecoration(
                         shape: BoxShape.rectangle,
-                        color: Colors.white,
+                        color: Colors.red,
                         borderRadius: BorderRadius.circular(20.0),
                         boxShadow: [
                           BoxShadow(
@@ -103,7 +127,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     width: 150.0,
                     decoration: BoxDecoration(
                         shape: BoxShape.rectangle,
-                        color: Colors.white,
+                        color: Colors.blueAccent,
                         borderRadius: BorderRadius.circular(20.0),
                         boxShadow: [
                           BoxShadow(
@@ -121,4 +145,11 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
+}
+
+class Sales {
+  final String day;
+  final int sold;
+
+  Sales(this.day, this.sold);
 }
