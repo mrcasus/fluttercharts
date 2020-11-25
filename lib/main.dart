@@ -128,6 +128,16 @@ class _MyHomePageState extends State<MyHomePage> {
                               blurRadius: 10.0)
                         ]),
                   ),
+                  Container(
+                    alignment: FractionalOffset.centerLeft,
+                    child: Image(
+                      image: AssetImage(
+                        'images/picture3.png',
+                      ),
+                      height: 150,
+                      width: 150,
+                    ),
+                  ),
                 ],
               ),
               Stack(
