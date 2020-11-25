@@ -1,8 +1,18 @@
+import 'package:flutter/services.dart';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 
-void main() => runApp(MyApp());
+//void main() => runApp(MyApp());
+
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitDown, DeviceOrientation.portraitUp]).then((_) {
+    runApp(MyApp());
+  });
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -94,7 +104,7 @@ class _MyHomePageState extends State<MyHomePage> {
               SizedBox(height: 250, child: chart),
             ],
           ),
-          
+
           SizedBox(
             height: 60.0,
           ),
