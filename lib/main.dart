@@ -1,10 +1,11 @@
 import 'package:flutter/services.dart';
-
-import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:charts_flutter/flutter.dart' as charts;
-
-//void main() => runApp(MyApp());
+import 'package:get/get.dart';
+import 'package:bottom_navy_bar/bottom_navy_bar.dart';
+import 'package:flutter/material.dart';
+import 'package:fluttercharts/screens/bakimList.dart';
+import 'package:fluttercharts/screens/demirbasList.dart';
+import 'package:fluttercharts/screens/homeScreen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,45 +16,43 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
+      //Page Screen arası rout config
+      getPages: [
+        GetPage(name: '/home', page: () => MyHomePage()),
+      ],
+
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
       debugShowCheckedModeBanner: false,
-      home: MyHomePage(),
+      home: MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
+  MyHomePage({Key key, this.title}) : super(key: key);
+
+  final String title;
+
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  int currentIndex = 0;
+  List<Widget> _listPages = [
+    HomeTabScreen(),
+    DemirbasListScreen(),
+    BakimListScreen()
+  ];
+
   @override
   Widget build(BuildContext context) {
-    var data = [
-      Sales("Bakım Yapılan", 15),
-      Sales("Bakım Yapılmıyan", 30),
-    ];
-
-    var series = [
-      charts.Series(
-          domainFn: (Sales sales, _) => sales.day,
-          measureFn: (Sales sales, _) => sales.sold,
-          id: 'Sales',
-          data: data,
-          labelAccessorFn: (Sales sales, _) =>
-              '${sales.day}: ${sales.sold.toString()}')
-    ];
-
-    var chart = charts.PieChart(
-      series,
-      defaultRenderer: charts.ArcRendererConfig(
-          arcRendererDecorators: [charts.ArcLabelDecorator()]),
-    );
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -72,7 +71,9 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         actions: <Widget>[
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Get.toNamed("/home");
+            },
             icon: Icon(
               FontAwesomeIcons.bell,
               color: Colors.black,
@@ -80,96 +81,38 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.only(left: 15.0, right: 15.0),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          SizedBox(
-            height: 40.0,
+      body: _listPages[currentIndex],
+      bottomNavigationBar: BottomNavyBar(
+        selectedIndex: currentIndex,
+        showElevation: true,
+        itemCornerRadius: 8,
+        curve: Curves.easeInBack,
+        onItemSelected: (index) => setState(() {
+          currentIndex = index;
+        }),
+        items: [
+          BottomNavyBarItem(
+            icon: Icon(Icons.apps),
+            title: Text('Anasayfa'),
+            activeColor: Colors.red,
+            textAlign: TextAlign.center,
           ),
-          Stack(
-            children: [
-              Container(
-                height: 250.0,
-                decoration: BoxDecoration(
-                    shape: BoxShape.rectangle,
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20.0),
-                    boxShadow: [
-                      BoxShadow(
-                          color: Colors.black45,
-                          offset: Offset(0.0, 10.0),
-                          blurRadius: 10.0)
-                    ]),
-              ),
-              SizedBox(height: 250, child: chart),
-            ],
+          BottomNavyBarItem(
+            icon: Icon(Icons.people),
+            title: Text('Demirbaş Liste'),
+            activeColor: Colors.purpleAccent,
+            textAlign: TextAlign.left,
           ),
-
-          SizedBox(
-            height: 60.0,
+          BottomNavyBarItem(
+            icon: Icon(Icons.message),
+            title: Text(
+              'Bakım Listesi',
+            ),
+            activeColor: Colors.pink,
+            textAlign: TextAlign.center,
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Stack(
-                children: [
-                  Container(
-                    height: 150.0,
-                    width: 150.0,
-                    decoration: BoxDecoration(
-                        shape: BoxShape.rectangle,
-                        color: Colors.red,
-                        borderRadius: BorderRadius.circular(20.0),
-                        boxShadow: [
-                          BoxShadow(
-                              color: Colors.black45,
-                              offset: Offset(0.0, 10.0),
-                              blurRadius: 10.0)
-                        ]),
-                  ),
-                  Container(
-                    alignment: FractionalOffset.centerLeft,
-                    child: Image(
-                      image: AssetImage(
-                        'images/picture3.png',
-                      ),
-                      height: 150,
-                      width: 150,
-                    ),
-                  ),
-                ],
-              ),
-              Stack(
-                children: [
-                  Container(
-                    height: 150.0,
-                    width: 150.0,
-                    decoration: BoxDecoration(
-                        shape: BoxShape.rectangle,
-                        color: Colors.blueAccent,
-                        borderRadius: BorderRadius.circular(20.0),
-                        boxShadow: [
-                          BoxShadow(
-                              color: Colors.black45,
-                              offset: Offset(0.0, 10.0),
-                              blurRadius: 10.0)
-                        ]),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          // Text('data')
-        ]),
+        ],
       ),
     );
   }
-}
-
-class Sales {
-  final String day;
-  final int sold;
-
-  Sales(this.day, this.sold);
 }
